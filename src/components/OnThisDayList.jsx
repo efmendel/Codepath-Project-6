@@ -71,6 +71,7 @@ function OnThisDayList({ datesData }) {
             <th>Event</th>
             <th>Birth</th>
             <th>Death</th>
+            <th>Link</th>
           </tr>
         </thead>
         <tbody>
@@ -103,6 +104,9 @@ function OnThisDayList({ datesData }) {
                 ) : (
                   "—"
                 )}
+              </td>
+              <td>
+                <img src="src/images/link-image.png" class="link"></img>
               </td>
             </tr>
           ))}

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Chart as ChartJS } from "chart.js/auto";
+import { Line, Bar } from "react-chartjs-2";
 import "./App.css";
 import SingleSummary from "./components/SingleSummary";
 import OnThisDayList from "./components/OnThisDayList";
@@ -44,7 +46,7 @@ function App() {
       const results = await Promise.all(responses);
       const resultsWithDates = results.map((result, idx) => ({
         ...result,
-        date: dates[idx], 
+        date: dates[idx],
       }));
       setdatesData(resultsWithDates);
     } catch (error) {
@@ -131,8 +133,113 @@ function App() {
           </div>
         </div>
 
-        <div class="table-container">
-          <OnThisDayList datesData={datesData}></OnThisDayList>
+        <div class="main-page-container">
+          <div class="table-container">
+            <OnThisDayList datesData={datesData}></OnThisDayList>
+          </div>
+          <div class="graphs-container">
+            <div class="line-container">
+              <Line
+                data={{
+                  labels: datesData.map(
+                    (date) => `${date.date.month}/${date.date.day}`
+                  ),
+                  datasets: [
+                    {
+                      label: "Average Event Year",
+                      data: datesData.map((date) => {
+                        const events = date.data.Events;
+                        const sum = events.reduce(
+                          (acc, event) => acc + parseInt(event.year),
+                          0
+                        );
+                        return sum / events.length;
+                      }),
+                      borderColor: "rgba(88, 24, 69, 1)",
+                      backgroundColor: "rgba(88, 24, 69, 0.2)",
+                      color: "rgba(88, 24, 69, 1)",
+                      tension: 0.4,
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: "rgba(88, 24, 69, 1)",
+                      },
+                    },
+                  },
+                  scales: {
+                    x: {
+                      ticks: {
+                        color: "rgba(88, 24, 69, 1)",
+                      },
+                      grid: {
+                        color: "rgba(88, 24, 69, 0.2)",
+                      },
+                    },
+                    y: {
+                      ticks: {
+                        color: "rgba(88, 24, 69, 1)",
+                      },
+                      grid: {
+                        color: "rgba(88, 24, 69, 0.2)",
+                      },
+                    },
+                  },
+                }}
+              ></Line>
+            </div>
+            <div class="bar-container">
+              <Bar
+                data={{
+                  labels: datesData.map(
+                    (date) => `${date.date.month}/${date.date.day}`
+                  ),
+                  datasets: [
+                    {
+                      label: "Oldest Year of \"Celebrity\" Birth",
+                      data: datesData.map((date) => {
+                        return date.data.Births[0].year
+                      }),
+                      borderColor: "rgba(88, 24, 69, 1)",
+                      backgroundColor: "rgba(88, 24, 69, 1)",
+                      color: "rgba(88, 24, 69, 1)",
+                      tension: 0.4,
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: "rgba(88, 24, 69, 1)",
+                      },
+                    },
+                  },
+                  scales: {
+                    x: {
+                      ticks: {
+                        color: "rgba(88, 24, 69, 1)",
+                      },
+                      grid: {
+                        color: "rgba(88, 24, 69, 0.2)",
+                      },
+                    },
+                    y: {
+                      ticks: {
+                        color: "rgba(88, 24, 69, 1)",
+                      },
+                      grid: {
+                        color: "rgba(88, 24, 69, 0.2)",
+                      },
+                    },
+                  },
+                }}
+              ></Bar>
+            </div>
+          </div>
         </div>
       </div>
     </div>
